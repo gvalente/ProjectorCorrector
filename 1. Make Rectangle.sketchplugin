@@ -1,0 +1,30 @@
+// Make Rectangle (shift cmd o)
+
+@import 'utilities.js'
+
+// ----- MAKE RECTANGLE ----- //
+
+log("log starting3")
+
+var doc = context.document;
+
+// make rectangle
+var rectShape   = MSRectangleShape.alloc().init();
+rectShape.name = 'overlay';
+
+// set rectangle properties
+// TODO: intelligently set width and height
+rectShape.frame = MSRect.rectWithRect(NSMakeRect(-2000,-2000,10000,10000));
+
+// make layer
+var shapeGroup = MSShapeGroup.shapeWithPath(rectShape);
+		shapeGroup.isLocked = true;
+
+
+// Add fill to rectangle
+utils.addFillToShape(shapeGroup, utils.overlayColor, utils.overlayAlpha);
+
+// add layer to page
+doc.currentPage().addLayers([shapeGroup]);
+
+log('rect placed');
