@@ -1,0 +1,25 @@
+{
+  "name"              : "Projector Corrector",
+  "description"       : "A utility for creating quick artboard overlays to improve contrast on projectors",
+  "author"            : "gino",
+  "homepage"          : "https://www.linkedin.com/in/ginovalente",
+  "version"           : "0.1",
+  "identifier"        : "com.example.sketch.projector-corrector",
+  "compatibleVersion" : "3.8.3",
+
+  "commands" : [
+    {
+    "name"       : "Make Rectangle",
+    "identifier" : "toggle-overlay",
+    "shortcut"   : "ctrl shift p",
+    "script"     : "corrector.sketchscript",
+    "handler"    : "toggleOverlay"
+    }
+  ],
+  "menu" : {
+    "title" : "Projector Corrector",
+    "items" : [
+      "toggle-overlay"
+    ]
+  }
+}
