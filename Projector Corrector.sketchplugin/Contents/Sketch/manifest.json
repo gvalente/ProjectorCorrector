@@ -15,6 +15,7 @@
     "script"     : "corrector.sketchscript",
     "handler"    : "toggleOverlay"
     }
+
   ],
   "menu" : {
     "title" : "Projector Corrector",
