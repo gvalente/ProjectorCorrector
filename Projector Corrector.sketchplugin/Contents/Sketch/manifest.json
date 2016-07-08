@@ -9,18 +9,34 @@
 
   "commands" : [
     {
-    "name"       : "Make Rectangle",
-    "identifier" : "toggle-overlay",
-    "shortcut"   : "ctrl shift p",
-    "script"     : "corrector.sketchscript",
-    "handler"    : "toggleOverlay"
+      "name"       : "Make Rectangle",
+      "identifier" : "toggle-overlay",
+      "shortcut"   : "ctrl shift p",
+      "script"     : "corrector.sketchscript",
+      "handler"    : "toggleOverlay"
+    },
+    {
+      "name"       : "Increase Overlay",
+      "identifier" : "increase-overlay",
+      "shortcut"   : "ctrl shift o",
+      "script"     : "corrector.sketchscript",
+      "handler"    : "increaseOverlay"
+    },
+    {
+      "name"       : "Decrease Overlay",
+      "identifier" : "decrease-overlay",
+      "shortcut"   : "ctrl shift [",
+      "script"     : "corrector.sketchscript",
+      "handler"    : "decreaseOverlay"
     }
-
   ],
+
   "menu" : {
     "title" : "Projector Corrector",
     "items" : [
-      "toggle-overlay"
+      "toggle-overlay",
+      "increase-overlay",
+      "decrease-overlay"
     ]
   }
 }

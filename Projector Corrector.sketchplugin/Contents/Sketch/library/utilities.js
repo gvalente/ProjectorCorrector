@@ -3,6 +3,7 @@ var com = com || {};
 com.gino = {
 	overlayColor   : '#FF0000',
 	overlayAlpha   : 0.1,
+    overlayChange  : 0.05,
 	overlayPadding : 0,
 	overlayName    : 'PCoverlay',
 	context        : undefined,
@@ -13,7 +14,6 @@ com.gino = {
 	current        : undefined,
 
     init: function(context){
-        log("starting init");
         this.context = context;
         this.document = context.document;
         this.selection = context.selection;
@@ -88,6 +88,7 @@ com.gino = {
     }
 };
 
+
 // Find
 com.gino.extend({
     find: function(name, container, isArray, field){
@@ -114,11 +115,14 @@ com.gino.extend({
     }
 });
 
+
 // Helper Functions
 com.gino.extend({
 	// add a color and alpha fill to a shape
 	addFillToShape: function(shape, color, alpha) {
-		// Check for existing fill and add
+        var alpha = alpha || 1;
+
+        // Check for existing fill and add
 		var fill = shape.style().addStylePartOfType(0);
 		// add color to fill
 		fill.color = MSColor.colorWithSVGString(color).colorWithAlpha(alpha);
@@ -129,37 +133,77 @@ com.gino.extend({
 		var pageBounds = MSLayerGroup.groupBoundsForLayers( this.page.artboards() );
 		
 		return NSMakeRect(
-			+pageBounds.origin.x    - (pageBounds.size.width  * this.overlayPadding / 2),
-			+pageBounds.origin.y    - (pageBounds.size.height * this.overlayPadding / 2),
-			+pageBounds.size.width  * (1 + this.overlayPadding),
-			+pageBounds.size.height * (1 + this.overlayPadding)
+			+pageBounds.origin.x    - ( pageBounds.size.width  * this.overlayPadding / 2 ),
+			+pageBounds.origin.y    - ( pageBounds.size.height * this.overlayPadding / 2 ),
+			+pageBounds.size.width  * ( 1 + this.overlayPadding ),
+			+pageBounds.size.height * ( 1 + this.overlayPadding )
 		);
-	}
+	},
+
+    // check if PCoverlay is present on any page
+    overlayExists: function(container) {
+        var container = container || this.document.pages();
+        
+        // Single Page
+        if( container instanceof MSPage ) {
+            return this.find( this.overlayName, container );
+        }
+        // Multiple Pages
+        for( var i = 0; i < container.count(); i++ ) {
+            if( this.find(this.overlayName, container[i]) ) return true;
+        }
+
+        return false;
+    }
 
 });
 
 
 // Overlay
 com.gino.extend({
+    createOverlay: function() {
+        var rectShape = MSRectangleShape.alloc().initWithFrame( this.getArtboardBounds() );
+
+        var shapeGroup = MSShapeGroup.shapeWithPath(rectShape);
+            shapeGroup.isLocked = true;
+            shapeGroup.name = this.overlayName;
+        
+        this.addFillToShape( shapeGroup, this.overlayColor, this.overlayAlpha );
+        return [shapeGroup];
+    },
 	addOverlay: function() {
-		var rectShape = MSRectangleShape.alloc().initWithFrame( this.getArtboardBounds() );
-				
-		var shapeGroup = MSShapeGroup.shapeWithPath(rectShape);
-			shapeGroup.isLocked = true;
-			shapeGroup.name = this.overlayName;
-		
-		this.addFillToShape(shapeGroup, this.overlayColor, this.overlayAlpha);
-		this.page.addLayers([shapeGroup]);
+		var pages = this.document.pages();
+
+        for( var i = 0; i < pages.count(); i++ ) {
+            pages[i].addLayers( this.createOverlay() );
+        }
 	},
     removeOverlay: function() {
-        this.removeLayer( this.find(this.overlayName) );
+        var pages = this.document.pages();
+        
+        for( var i = 0; i < pages.count(); i++ ) {
+            this.removeLayer( this.find(this.overlayName, pages[i]) );
+        }
     },
     // check for existence of overlay and either add or remove
     toggleOverlay: function() {
-        if( this.find(this.overlayName) ) {
+        if( this.overlayExists() ) {
             this.removeOverlay();
         } else {
             this.addOverlay();
         }
+    },
+    increaseOverlay: function() {
+        log('increase');
+        if( !this.overlayExists() ) return false;
+
+        // for( var i = 0; i < pages.count(); i++ ) {
+        //     //log( this.find(this.overlayName, pages[i]) );
+        // }
+    },
+    decreaseOverlay: function() {
+        log('decrease');
+        // if( !this.overlayExists() ) then return;
+
     }
 });
