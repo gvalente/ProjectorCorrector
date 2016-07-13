@@ -205,8 +205,7 @@ com.gino.extend({
         for( var i = 0; i < this.pages.count(); i++ ) {
             var overlay = this.getOverlay( this.pages[i] );
             
-            var newOpacity = overlay.style().contextSettings().opacity() + this.overlayChange;
-            log(newOpacity);
+            var newOpacity = (overlay.style().contextSettings().opacity() + this.overlayChange).toFixed(2);
             if( newOpacity > 1 ) { continue; }
 
             overlay.style().contextSettings().opacity = newOpacity;
@@ -219,7 +218,7 @@ com.gino.extend({
         for( var i = 0; i < this.pages.count(); i++ ) {
             var overlay = this.getOverlay( this.pages[i] );
             
-            var newOpacity = overlay.style().contextSettings().opacity() - this.overlayChange;
+            var newOpacity = (overlay.style().contextSettings().opacity() - this.overlayChange).toFixed(2);
             if( newOpacity < 0 ) { continue; }
 
             overlay.style().contextSettings().opacity = newOpacity;
