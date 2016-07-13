@@ -18,14 +18,14 @@
     {
       "name"       : "Increase Overlay",
       "identifier" : "increase-overlay",
-      "shortcut"   : "ctrl shift o",
+      "shortcut"   : "ctrl shift [",
       "script"     : "corrector.sketchscript",
       "handler"    : "increaseOverlay"
     },
     {
       "name"       : "Decrease Overlay",
       "identifier" : "decrease-overlay",
-      "shortcut"   : "ctrl shift [",
+      "shortcut"   : "ctrl shift o",
       "script"     : "corrector.sketchscript",
       "handler"    : "decreaseOverlay"
     }
