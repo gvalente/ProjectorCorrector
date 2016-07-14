@@ -133,8 +133,9 @@ com.gino.extend({
 	},
 
 	// get artboard bounds of a page
-	getArtboardBounds: function() {
-		var pageBounds = MSLayerGroup.groupBoundsForLayers( this.page.artboards() );
+	getArtboardBounds: function(page) {
+		log('getBounds');
+        var pageBounds = MSLayerGroup.groupBoundsForLayers(page);
 		
 		return NSMakeRect(
 			+pageBounds.origin.x    - ( pageBounds.size.width  * this.overlayPadding / 2 ),
@@ -169,8 +170,9 @@ com.gino.extend({
 
 // Overlay
 com.gino.extend({
-    createOverlay: function() {
-        var rectShape = MSRectangleShape.alloc().initWithFrame( this.getArtboardBounds() );
+    createOverlay: function(page) {
+        log('createOverlay');
+        var rectShape = MSRectangleShape.alloc().initWithFrame( this.getArtboardBounds( page.artboards() ) );
 
         var overlay = MSShapeGroup.shapeWithPath(rectShape);
             overlay.isLocked = true;
@@ -178,11 +180,14 @@ com.gino.extend({
             overlay.style().contextSettings().opacity = this.overlayAlpha;
         
         this.addFillToShape( overlay, this.overlayColor );
+        log(overlay);
         return [overlay];
     },
 	addOverlay: function() {
+        log('addOverlay');
         for( var i = 0; i < this.pages.count(); i++ ) {
-            this.pages[i].addLayers( this.createOverlay() );
+            log('addOverlay page ' + i);
+            this.pages[i].addLayers( this.createOverlay( this.pages[i] ) );
         }
 	},
     removeOverlay: function() {
@@ -192,10 +197,10 @@ com.gino.extend({
     },
     // check for existence of overlay and either add or remove
     toggleOverlay: function() {
-        if( this.overlayExists() ) {
-            this.removeOverlay();
-        } else {
+        if( !this.overlayExists() ) {
             this.addOverlay();
+        } else {
+            this.removeOverlay();
         }
     },
     increaseOverlay: function() {
