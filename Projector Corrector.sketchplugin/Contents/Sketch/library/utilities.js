@@ -3,7 +3,7 @@ var com = com || {};
 com.gino = {
 	overlayColor   : '#000000',
 	overlayAlpha   : 0.1,
-    overlayChange  : 0.02,
+    overlayOffset  : 0.02,
 	overlayPadding : 0,
 	overlayName    : 'PCoverlay',
 	context        : undefined,
@@ -131,10 +131,8 @@ com.gino.extend({
 		// add color to fill
 		fill.color = MSColor.colorWithSVGString(color).colorWithAlpha(alpha);
 	},
-
 	// get artboard bounds of a page
 	getArtboardBounds: function(page) {
-		log('getBounds');
         var pageBounds = MSLayerGroup.groupBoundsForLayers(page);
 		
 		return NSMakeRect(
@@ -144,7 +142,6 @@ com.gino.extend({
 			+pageBounds.size.height * ( 1 + this.overlayPadding )
 		);
 	},
-
     // check if PCoverlay is present on any page
     overlayExists: function(container) {
         var container = container || this.pages;
@@ -164,14 +161,12 @@ com.gino.extend({
         var container = container || this.page;
         return this.find( this.overlayName, container );
     }
-
 });
 
 
 // Overlay
 com.gino.extend({
     createOverlay: function(page) {
-        log('createOverlay');
         var rectShape = MSRectangleShape.alloc().initWithFrame( this.getArtboardBounds( page.artboards() ) );
 
         var overlay = MSShapeGroup.shapeWithPath(rectShape);
@@ -180,13 +175,10 @@ com.gino.extend({
             overlay.style().contextSettings().opacity = this.overlayAlpha;
         
         this.addFillToShape( overlay, this.overlayColor );
-        log(overlay);
         return [overlay];
     },
 	addOverlay: function() {
-        log('addOverlay');
         for( var i = 0; i < this.pages.count(); i++ ) {
-            log('addOverlay page ' + i);
             this.pages[i].addLayers( this.createOverlay( this.pages[i] ) );
         }
 	},
@@ -203,30 +195,27 @@ com.gino.extend({
             this.removeOverlay();
         }
     },
-    increaseOverlay: function() {
-        log('increase');
+    // Offset overlay alpha based on operator
+    offsetOverlayAlpha: function(op) {
         if( !this.overlayExists() ) return;
 
-        for( var i = 0; i < this.pages.count(); i++ ) {
-            var overlay = this.getOverlay( this.pages[i] );
-            
-            var newOpacity = (overlay.style().contextSettings().opacity() + this.overlayChange).toFixed(2);
-            if( newOpacity > 1 ) { continue; }
-
-            overlay.style().contextSettings().opacity = newOpacity;
+        // Check new opacity and whether it is between 0 and 1
+        var operators = {
+            '+': function(overlay, opacityChange) {
+                    var newOpacity = (overlay.style().contextSettings().opacity() + opacityChange).toFixed(2);
+                    return (newOpacity <= 1) ? newOpacity : false;
+            },
+            '-': function(overlay, opacityChange) {
+                    var newOpacity = (overlay.style().contextSettings().opacity() - opacityChange).toFixed(2);
+                    return (newOpacity >= 0) ? newOpacity : false;
+            }
         }
-    },
-    decreaseOverlay: function() {
-        log('decrease');
-        if( !this.overlayExists() ) return;
 
         for( var i = 0; i < this.pages.count(); i++ ) {
             var overlay = this.getOverlay( this.pages[i] );
-            
-            var newOpacity = (overlay.style().contextSettings().opacity() - this.overlayChange).toFixed(2);
-            if( newOpacity < 0 ) { continue; }
 
-            overlay.style().contextSettings().opacity = newOpacity;
+            var newOpacity = operators[op](overlay, this.overlayOffset);
+            if(newOpacity) { overlay.style().contextSettings().opacity = newOpacity; }
         }
     }
 });
