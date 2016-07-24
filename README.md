@@ -7,18 +7,14 @@
 2. Unzip the archive
 3. Double click <kbd>Projector Corrector.sketchplugin</kbd> to install
 
-
-
 ## Usage
 **Toggle the Overlay**  
-<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> will toggle the overlay on and off. This will create a locked rectangle over the bounds of each page's artboards.
-The default overlay color is #000000 with a starting opacity of 10%.
+<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> will toggle the overlay on and off. This will create a locked rectangle over the bounds of each page's artboards. The default overlay color is #000000 with a starting opacity of 10%.
 
 **Increment the Overlay**  
-Once the overlay is created, you can quickly increment their opacity to fine tune your brightness and contrast correction.
-The default overlay opacity offset is 2%.  
-<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>[</kbd> – Increase the overlay opacity by 2%.  
-<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>o</kbd> – Decrease the overlay opacity by 2%.  
+Once the overlay is created, you can quickly increment their opacity to fine tune your brightness and contrast correction. The default overlay opacity offset is 2%.  
+<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>[</kbd> – Increase the overlay opacity.  
+<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>o</kbd> – Decrease the overlay opacity.  
 
 The overlay color, incrementation value and overlay padding on your artboard bounds can be modified in These configs can be modified in <kbd>/Contents/Sketch/library/utilities.js</kbd>.
 
