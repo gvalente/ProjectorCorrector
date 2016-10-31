@@ -4,7 +4,7 @@ com.gino = {
 	overlayColor   : '#000000',
 	overlayAlpha   : 0.1,
     overlayOffset  : 0.02,
-	overlayPadding : 0,
+	overlayPadding : 0.25,
 	overlayName    : 'ProjectorCorrector',
 	context        : undefined,
 	document       : undefined,
@@ -147,12 +147,13 @@ com.gino.extend({
 	// get artboard bounds of a page
 	getArtboardBounds: function(page) {
         var pageBounds = MSLayerGroup.groupBoundsForLayers(page);
-		
+        const unifiedPadding = Math.max(pageBounds.size.width, pageBounds.size.height) * this.overlayPadding;
+
 		return NSMakeRect(
-			+pageBounds.origin.x    - ( pageBounds.size.width  * this.overlayPadding / 2 ),
-			+pageBounds.origin.y    - ( pageBounds.size.height * this.overlayPadding / 2 ),
-			+pageBounds.size.width  * ( 1 + this.overlayPadding ),
-			+pageBounds.size.height * ( 1 + this.overlayPadding )
+			+pageBounds.origin.x    - unifiedPadding / 2,
+			+pageBounds.origin.y    - unifiedPadding / 2,
+			+pageBounds.size.width  + unifiedPadding,
+			+pageBounds.size.height + unifiedPadding
 		);
 	},
 
@@ -165,12 +166,15 @@ com.gino.extend({
         if( container instanceof MSPage ) {
             return this.find( this.overlayName, container );
         }
+        
         // Multiple Pages
-        for( var i = 0; i < container.count(); i++ ) {
-            if( this.find(this.overlayName, container[i]) ) return true;
-        }
+        var exists = false;
+        this.iterateObjects(container, function(childPage) {
+            //TODO: Check if duplicate layers exist on same page
+            if( com.gino.find(com.gino.overlayName, childPage) ) exists = true;
+        });
 
-        return false;
+        return exists;
     },
     getOverlay: function(container) {
         var container = container || this.page;
@@ -194,18 +198,14 @@ com.gino.extend({
     },
 	addOverlay: function() {
         this.iterateObjects(this.pages, function(childPage) {
+            //TODO: Skip if no artboards on page
             childPage.addLayers( com.gino.createOverlay(childPage) );
         });
-
-        // for( var i = 0; i < this.pages.count(); i++ ) {
-        //     //TODO: Skip if no artboards on page
-        //     this.pages[i].addLayers( this.createOverlay( this.pages[i] ) );
-        // }
 	},
     removeOverlay: function() {
-        for( var i = 0; i < this.pages.count(); i++ ) {
-            this.removeLayer( this.find(this.overlayName, this.pages[i]) );
-        }
+        this.iterateObjects(this.pages, function(childPage) {
+            com.gino.removeLayer( com.gino.find(com.gino.overlayName, childPage) );
+        });
     },
     // check for existence of overlay and either add or remove
     toggleOverlay: function() {
@@ -222,20 +222,21 @@ com.gino.extend({
         // Check new opacity and whether it is between 0 and 1
         var operators = {
             '+': function(overlay, opacityChange) {
-                    var newOpacity = (overlay.style().contextSettings().opacity() + opacityChange).toFixed(2);
+                    var newOpacity = ( overlay.style().contextSettings().opacity() + opacityChange ).toFixed(2);
                     return (newOpacity <= 1) ? newOpacity : false;
             },
             '-': function(overlay, opacityChange) {
-                    var newOpacity = (overlay.style().contextSettings().opacity() - opacityChange).toFixed(2);
+                    var newOpacity = ( overlay.style().contextSettings().opacity() - opacityChange ).toFixed(2);
                     return (newOpacity >= 0) ? newOpacity : false;
             }
         }
 
-        for( var i = 0; i < this.pages.count(); i++ ) {
-            var overlay = this.getOverlay( this.pages[i] );
+        this.iterateObjects(this.pages, function(childPage) {
+            const overlay = com.gino.getOverlay( childPage );
 
-            var newOpacity = operators[op](overlay, this.overlayOffset);
+            // get new opacity and apply if a valid increment
+            const newOpacity = operators[op](overlay, com.gino.overlayOffset);
             if(newOpacity) { overlay.style().contextSettings().opacity = newOpacity; }
-        }
+        });
     }
 });
