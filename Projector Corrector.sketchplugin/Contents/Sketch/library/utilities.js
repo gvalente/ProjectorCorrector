@@ -5,7 +5,7 @@ com.gino = {
 	overlayAlpha   : 0.1,
     overlayOffset  : 0.02,
 	overlayPadding : 0,
-	overlayName    : 'PCoverlay',
+	overlayName    : 'ProjectorCorrector',
 	context        : undefined,
 	document       : undefined,
 	selection      : undefined,
@@ -121,7 +121,19 @@ com.gino.extend({
 
 // Helper Functions
 com.gino.extend({
-	// add a color and alpha fill to a shape
+
+    // cleaner iteration function
+    iterateObjects: function(collection, iterator) {
+        for (var i = 0; i < collection.count(); i++) {
+            var object = collection.objectAtIndex(i);
+            var returnValue = iterator(object, i, collection);
+            if (returnValue === false) {
+                break;
+            }
+        }
+    },
+
+    // add a color and alpha fill to a shape
 	addFillToShape: function(shape, color, alpha) {
         var alpha = alpha || 1;
 
@@ -131,6 +143,7 @@ com.gino.extend({
 		// add color to fill
 		fill.color = MSColor.colorWithSVGString(color).colorWithAlpha(alpha);
 	},
+
 	// get artboard bounds of a page
 	getArtboardBounds: function(page) {
         var pageBounds = MSLayerGroup.groupBoundsForLayers(page);
@@ -142,6 +155,8 @@ com.gino.extend({
 			+pageBounds.size.height * ( 1 + this.overlayPadding )
 		);
 	},
+
+
     // check if PCoverlay is present on any page
     overlayExists: function(container) {
         var container = container || this.pages;
@@ -178,9 +193,14 @@ com.gino.extend({
         return [overlay];
     },
 	addOverlay: function() {
-        for( var i = 0; i < this.pages.count(); i++ ) {
-            this.pages[i].addLayers( this.createOverlay( this.pages[i] ) );
-        }
+        this.iterateObjects(this.pages, function(childPage) {
+            childPage.addLayers( com.gino.createOverlay(childPage) );
+        });
+
+        // for( var i = 0; i < this.pages.count(); i++ ) {
+        //     //TODO: Skip if no artboards on page
+        //     this.pages[i].addLayers( this.createOverlay( this.pages[i] ) );
+        // }
 	},
     removeOverlay: function() {
         for( var i = 0; i < this.pages.count(); i++ ) {
