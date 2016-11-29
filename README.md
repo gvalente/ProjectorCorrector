@@ -9,12 +9,12 @@
 
 ## Usage
 **Toggle the Overlay**  
-<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd> will toggle the overlay on and off. This will create a locked rectangle over the bounds of each page's artboards. The default overlay color is #000000 with a starting opacity of 10%.
+<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd>: Toggle the overlay on and off. This will create a locked rectangle over the bounds of each page's artboards. The default overlay color is #000000 with a starting opacity of 10%.
 
 **Increment the Overlay**  
 Once the overlay is created, you can quickly increment their opacity to fine tune your brightness and contrast correction. The default overlay opacity offset is 2%.  
-<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>[</kbd> – Increase the overlay opacity.  
-<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>o</kbd> – Decrease the overlay opacity.  
+<kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>[</kbd>: Increase the overlay opacity.  
+<kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>o</kbd>: Decrease the overlay opacity.  
 
 The overlay color, incrementation value and overlay padding on your artboard bounds can be modified in These configs can be modified in <kbd>/Contents/Sketch/library/utilities.js</kbd>.
 
@@ -25,7 +25,6 @@ Projector Corrector is a standard sketch bundle and written in JavaScript.
 * **Smarter Overlays** – Use intelligent layer blend modes for targeted brightness and contrast correction. Help Wanted!
 * **Does cloning kill the original?** – Let your overlay offset persist in a session when toggling
 * **Don't forget about me!** – Time stamp the creation time of the overlay and prompt to delete if it has existed for more than 60 minutes
-* **It's Easy As A, B** – Gamma correction? Is this something we can achieve? Help Wanted!
 * **Initial Thrusters Disengage!** – I'm staring at that unoptimized code block too. Now that the initial build phase phase is near complete, I'll loop back and clean stuff up.
 
 ## License
