@@ -2,7 +2,7 @@ var com = com || {};
 
 com.gino = {
 	overlayColor   : '#000000',
-	overlayAlpha   : 0.1,
+	overlayAlpha   : 0.10,
     overlayOffset  : 0.02,
 	overlayPadding : 0.25,
 	overlayName    : 'ProjectorCorrector',
@@ -134,20 +134,21 @@ com.gino.extend({
     },
 
     // add a color and alpha fill to a shape
-	addFillToShape: function(shape, color, alpha) {
-        var alpha = alpha || 1;
+	addFillToShape: function(shape, color) {
 
         // Check for existing fill and add
 		var fill = shape.style().addStylePartOfType(0);
 
 		// add color to fill
-		fill.color = MSColor.colorWithSVGString(color).colorWithAlpha(alpha);
+		fill.color = MSImmutableColor.colorWithSVGString(color);
 	},
 
 	// get artboard bounds of a page
 	getArtboardBounds: function(page) {
+        // Normalize the padding based on width/height then max at 200 on each side
         var pageBounds = MSLayerGroup.groupBoundsForLayers(page);
-        const unifiedPadding = Math.max(pageBounds.size.width, pageBounds.size.height) * this.overlayPadding;
+        var unifiedPadding = Math.max(pageBounds.size.width, pageBounds.size.height) * this.overlayPadding;
+        unifiedPadding = Math.min(unifiedPadding, 400);
 
 		return NSMakeRect(
 			+pageBounds.origin.x    - unifiedPadding / 2,

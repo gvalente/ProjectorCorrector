@@ -1,11 +1,11 @@
 {
   "name"              : "Projector Corrector",
   "description"       : "A utility for creating quick artboard overlays to improve contrast on projectors",
-  "author"            : "gino",
-  "homepage"          : "https://www.linkedin.com/in/ginovalente",
-  "version"           : "0.2",
+  "author"            : "Gino",
+  "homepage"          : "https://github.com/gvalente/ProjectorCorrector",
+  "version"           : "0.3",
   "identifier"        : "com.example.sketch.projector-corrector",
-  "compatibleVersion" : "40.3",
+  "compatibleVersion" : "41.2",
 
   "commands" : [
     {
