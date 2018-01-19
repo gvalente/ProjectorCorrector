@@ -98,7 +98,7 @@ com.gino.extend({
         var predicate = NSPredicate.predicateWithFormat("(" + field + " != NULL) && (" + field + " == %@)", name);
         var container = container || this.current;
         var items;
-        
+
         if(isArray){
             items = container;
         }
@@ -146,7 +146,7 @@ com.gino.extend({
 	// get artboard bounds of a page
 	getArtboardBounds: function(page) {
         // Normalize the padding based on width/height then max at 200 on each side
-        var pageBounds = MSLayerGroup.groupBoundsForLayers(page);
+        var pageBounds = MSLayerGroup.groupBoundsForContainer(MSLayerArray.arrayWithLayers(page));
         var unifiedPadding = Math.max(pageBounds.size.width, pageBounds.size.height) * this.overlayPadding;
         unifiedPadding = Math.min(unifiedPadding, 400);
 
@@ -162,12 +162,12 @@ com.gino.extend({
     // check if PCoverlay is present on any page
     overlayExists: function(container) {
         var container = container || this.pages;
-        
+
         // Single Page
         if( container instanceof MSPage ) {
             return this.find( this.overlayName, container );
         }
-        
+
         // Multiple Pages
         var exists = false;
         this.iterateObjects(container, function(childPage) {
@@ -193,7 +193,7 @@ com.gino.extend({
             overlay.isLocked = true;
             overlay.name = this.overlayName;
             overlay.style().contextSettings().opacity = this.overlayAlpha;
-        
+
         this.addFillToShape( overlay, this.overlayColor );
         return [overlay];
     },
