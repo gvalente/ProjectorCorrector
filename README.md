@@ -9,7 +9,7 @@
 
 ## Usage
 **Toggle the Overlay**  
-<kbd>cmd</kbd> + <kbd>shift</kbd> + <kbd>p</kbd>: Toggle the overlay on and off. This will create a locked rectangle over the bounds of each page's artboards. The default overlay color is #000000 with a starting opacity of 10%.
+<kbd>ctrl</kbd> + <kbd>shift</kbd> + <kbd>p</kbd>: Toggle the overlay on and off. This will create a locked rectangle over the bounds of each page's artboards. The default overlay color is #000000 with a starting opacity of 10%.
 
 **Increment the Overlay**  
 Once the overlay is created, you can quickly increment their opacity to fine tune your brightness and contrast correction. The default overlay opacity offset is 2%.  
@@ -22,7 +22,7 @@ The overlay color, incrementation value and overlay padding on your artboard bou
 Projector Corrector is a standard sketch bundle and written in JavaScript.
 
 ## Future Features
-* **Smarter Overlays** – Use intelligent layer blend modes for targeted brightness and contrast correction. Help Wanted!
+* **Smarter Overlays** – Is there a smarter blend mode to use for the overlay? Toggle between blend modes? Ideas welcome.
 * **Does cloning kill the original?** – Let your overlay offset persist in a session when toggling
 * **Don't forget about me!** – Time stamp the creation time of the overlay and prompt to delete if it has existed for more than 60 minutes
 * **Initial Thrusters Disengage!** – I'm staring at that unoptimized code block too. Now that the initial build phase phase is near complete, I'll loop back and clean stuff up.
